@@ -1,7 +1,7 @@
 # JSON Web Key Set Server - Version 2
 
 modules needed to run server:  
-```pip install Flask pyjwt cryptography```
+```pip install pyjwt cryptography```
 
 command to run:  
 ```python jwksserver2.py```
