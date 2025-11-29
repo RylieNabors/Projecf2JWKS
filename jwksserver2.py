@@ -80,11 +80,11 @@ class MyServer(BaseHTTPRequestHandler):
 			}
 			token_payload = {
 				"user": "username",
-				"exp": datetime.datetime.utcnow() + datetime.timedelta(hours=1)
+				"exp": datetime.datetime.now() + datetime.timedelta(hours=1)
 			}
 			if 'expired' in params:
 				headers["kid"] = "expiredKID"
-				token_payload["exp"] = datetime.datetime.utcnow() - datetime.timedelta(hours=1)
+				token_payload["exp"] = datetime.datetime.now() - datetime.timedelta(hours=1)
 			encoded_jwt = jwt.encode(token_payload, pem, algorithm="RS256", headers=headers)
 			self.send_response(200)
 			self.end_headers()
@@ -149,10 +149,12 @@ if __name__ == "__main__":
 	conn.commit()
 
 	# save pem to database rather than making it a global variable
-	expiration_time = datetime.datetime.utcnow() + datetime.timedelta(hours=1)	
-	create_key(expiration_time)
-	expiration_time2 = datetime.datetime.utcnow() - datetime.timedelta(hours=1)	
-	create_key(expiration_time2)
+	# unexpired key
+	unexpired_time = int((datetime.datetime.now() + datetime.timedelta(hours=1)).timestamp())
+	create_key(unexpired_time)
+	# expired key
+	expired_time = int((datetime.datetime.now() - datetime.timedelta(hours=1)).timestamp())
+	create_key(expired_time)
 
 	try:
 		webServer.serve_forever()
